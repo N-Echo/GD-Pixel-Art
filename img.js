@@ -14,8 +14,9 @@ let data = require('./leveldata.json')
 let tiles = {1: 917 , 2: 916, 4: 211, 8: "211,32,2", 16: "211,32,4"}
 let gdLevels = process.env.HOME || process.env.USERPROFILE + "/AppData/Local/GeometryDash/CCLocalLevels.dat"
 
-Jimp.read("./" + file).then(async img => {
 
+Jimp.read("./" + file).then(async img => {
+    console.log("Credits to GDColon for the code (updated for 2.2)")
     let pixels = {1: {}, 2: {}, 4: {}, 8: {}, 16: {}}
     let imageSize = img.bitmap.width * img.bitmap.height
 
@@ -26,7 +27,7 @@ Jimp.read("./" + file).then(async img => {
         if (rgb[3] >= 200) pixels[1][`${x},${y}`] = rgb.slice(0, 3)
     })
 
-    function optimize(obj, distance) {
+    function optimize(obj, distance) { //optimization
         let scan = true
         Object.keys(obj).forEach((x, y) => {
             if (!obj[x] || obj[x][3] || !scan) return
@@ -57,7 +58,7 @@ Jimp.read("./" + file).then(async img => {
         while (Object.keys(pixels[i]).length != Object.keys(optimize(pixels[i], i)).length) pixels[i] = optimize(pixels[i], i)
     })
 
-    function rgb2hsv(r, g, b) {  // thanks absolute
+    function rgb2hsv(r, g, b) {  // thanks absolute //RGB to HSV
         r = r/255; g = g/255; b = b/255
         let h = 0; let mx = Math.max(r, g, b); let mn = Math.min(r, g, b); let df = mx-mn
         if (mx == mn) h = 0
@@ -102,9 +103,9 @@ Jimp.read("./" + file).then(async img => {
         console.log("Importing to GD...")
         saveData = saveData.split("<k>_isArr</k><t />")
         saveData[1] = saveData[1].replace(/<k>k_(\d+)<\/k><d><k>kCEK<\/k>/g, function(n) { return "<k>k_" + (Number(n.slice(5).split("<")[0])+1) + "</k><d><k>kCEK</k>" })
-        saveData = saveData[0] + "<k>_isArr</k><t />" + data.ham + data.bur + levelStr + data.ger + saveData[1]        
+        saveData = saveData[0] + "<k>_isArr</k><t />" + data.ham + data.bur + levelStr + data.ger + saveData[1] + "<k>_isArr</k><t />" + saveData[2]
         saveData = saveData.replace("[[NAME]]", file.split(".")[0].replace(/[^a-z|0-9]/gi, "").slice(0, 30)).replace("[[DESC]]", `${file} | ${pixelCount} pixels -> ${objCount} objects`)
-        fs.writeFileSync(gdLevels, saveData, 'utf8')
+        fs.writeFileSync("./testzone/CCLocalLevels.dat", saveData, 'utf8')
         console.log(`Saved! (${pixelCount} pixels -> ${objCount} objects)`);
     })
 
