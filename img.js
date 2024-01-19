@@ -105,7 +105,7 @@ Jimp.read("./" + file).then(async img => {
         saveData[1] = saveData[1].replace(/<k>k_(\d+)<\/k><d><k>kCEK<\/k>/g, function(n) { return "<k>k_" + (Number(n.slice(5).split("<")[0])+1) + "</k><d><k>kCEK</k>" })
         saveData = saveData[0] + "<k>_isArr</k><t />" + data.ham + data.bur + levelStr + data.ger + saveData[1] + "<k>_isArr</k><t />" + saveData[2]
         saveData = saveData.replace("[[NAME]]", file.split(".")[0].replace(/[^a-z|0-9]/gi, "").slice(0, 30)).replace("[[DESC]]", `${file} | ${pixelCount} pixels -> ${objCount} objects`)
-        fs.writeFileSync("./testzone/CCLocalLevels.dat", saveData, 'utf8')
+        fs.writeFileSync(gdLevels, saveData, 'utf8')
         console.log(`Saved! (${pixelCount} pixels -> ${objCount} objects)`);
     })
 
